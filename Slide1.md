@@ -34,6 +34,8 @@
 * Alternatively, type `c "hello.exs"` from iex (running in the directory where hello.exs is located).
 * On Mac OSX, Elixir is most easily installed via homebrew.
 * Elixir treats any line starting with a `#` as a comment.
+* Can use `IO.puts` to write string to console.
+* Can use `IO.inspect` to write collections to console.
 
 ##Elixir Language Characteristics
 
@@ -103,6 +105,7 @@
 
 ###Functions
 
+* Note: `functions.exs` contains answers I wrote for exercises in the Thomas book.
 * Elixir supports anonymous functions.
     * e.g. `square = fn (num) -> num + num end`
 * Elixir has very unusual function call syntax for calling anonymous functions.
@@ -115,7 +118,30 @@
     * Functions can refer to variables in their outer scope.
     * Those variables remain available to the function even after they go out of scope.
     * See [functions.exs](src/functions.exs) for an example.
-* Note: `functions.exs` contains answers I wrote for exercises in the Thomas book.
+* Elixir also supports shorter syntax for creating a function.
+    * `&(&1 + &2)` is equivalent to `fn (n1, n2) -> n1 + n2 end`
+    
+###Modules and Named Functions
+
+* See `Times` module in [functions.exs](src/functions.exs) for an example of defining a module and named function.
+* Note that there is no return keyword.
+* Functions can also be defined in a single-line syntax
+* A function can be defined multiple times in the same module
+    * Pattern matching is used to determine which function is called.
+    * See `Sums` module in [functions.exs](src/functions.exs) for an example.
+* Pattern matching can be refined with a guard clause using the `when` keyword
+    * See Guesser module in [functions.exs](src/functions.exs) for an example.
+* Default parameters can be defined for function parameters using `//` operator.
+* Private functions can be defined in a module by using `defp` instead of `def`.
+* Elixir allows chaining of functions using the `|>` operator.
+    * Similar to pipe operator in Linux.
+ 
+###Working with Collections
+
+* No `for` or `while` loop construct in Elixir.
+* Need to use recursive algorithms to work with lists
+    * See `Lists.mapsum` module in [collections.exs](src/collections.exs) for an example.
+
     
 
 
