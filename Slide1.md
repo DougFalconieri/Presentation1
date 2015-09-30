@@ -141,6 +141,42 @@
 * No `for` or `while` loop construct in Elixir.
 * Need to use recursive algorithms to work with lists
     * See `Lists.mapsum` module in [collections.exs](src/collections.exs) for an example.
+* Elixir supports dictionary-like functionality through both maps and HashDict
+    * HashDicts are more performant for large amounts of data.
+    * Both can be worked with similarly using functions in the `Dict` module.
+* Structs are another dictionary-like structure, but keys are limited to atoms.
+* Elixir also supports set functionality with the `HashSet`.
+   * Can be manipulated with functions in the `Set` modules.
+* Elixir comes a large number of functions for working with collections in the `Enum` module.
+    * Due to dynamic typing many of these functions work with a variety of collections.
+* Elixir also supports Streams which operate on collections in a lazy manner that doesn't create intermediate lists.
+    * Useful for dealing with very large lists.
+* Elixir supports list comprehensions -- a short syntax for transforming a collection
+    * e.g. `for x <- 1..10, rem(x, 2) == 0, do: x * x` returns a list of squares of the even numbers between 1 and 10.
+    
+###Strings
+
+* Elixir supports two kinds of strings.
+    * Double-quoted strings are represented directly as UTF-8 encoded bytes.
+    * Single-quoted strings are represented as a list of integer character codes.
+* Both types support multi-line strings and escape sequences.
+* Both also support embedding Elixir variables.
+    * e.g. `IO.puts "Your total is $#{total}"`
+* Library functions for working with strings is found in the `String` module.
+    * Only works on double-quoted strings.
+    
+###Control Flow
+
+* Elixir includes several keywords for conditional control flow.
+* In idiomatic Elixir, these are rarely used.
+    * Pattern matching and guard clauses are preferred.
+* `if`:  e.g. `if value > 0, :do "true" ,:else "false"`
+* `until`:  works like a reversed `if`.
+* Elixir also supports two multiple branch conditionals `case` and `cond`.
+    * `case` uses standard Elixir pattern matching.
+* Elixir supports throwing exceptions using the `raise` keyword.
+    * But they are rarely used. Elixir is focused on recovering from most errors.
+
 
     
 
