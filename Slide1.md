@@ -176,6 +176,43 @@
     * `case` uses standard Elixir pattern matching.
 * Elixir supports throwing exceptions using the `raise` keyword.
     * But they are rarely used. Elixir is focused on recovering from most errors.
+    
+###Concurrency
+
+* One of Elixir's greatest strengths.
+* Elixir uses an actor concurrency model.
+* To run a function concurrently, create a new process by passing the function to the `spawn` function.
+   * Elixir processes do not map one-to-one to operating system processes - they are much lighter-weight.
+   * Accordingly, Elixir programs often spawn many processes.
+* `spawn` returns a PID that uniquely identifies the new process.
+* The `send` command takes a PID and a message (usually an atom or tuple) and sends it to the PID's process.
+* A process can use the `receive` command to handle messages.
+    * `receive do
+         {:ok, message} -> IO.puts message
+       end`
+    * a `receive` block only handles a single message. To make it loop and handle multiple messages, use recursion.
+    * `receive` blocks can contain an `after` clause to cause to time out after a certain amount of time.
+* The `spawn-link` command can be used to create a linked process.
+    * The parent process will exit if the linked process exits.
+* The `spawn-monitor` command can be used to create a monitored process.
+    * The parent process will be informed if the monitored process exits.
+* Processes can be assigned to different nodes. Nodes are instances of the Erlang VM.
+    * Nodes can potentially be on different computers on a network.
+* Distributed applications can make use of OTP -- Erlang's powerful networking platform.
+    * Supports advanced features like supervisor processes that can restart failed child processes.
+    * Also, supports ability to hot-swap process codes with no downtime.
+        * These features are implemented using processes to store and convert process state.
+* To create a server process in Elixir, you can add the `GenServer` behavior.
+    * Provides callbacks like `handle_call` to recieve data from another process and return a result.
+    * `handle_cast` is similar, but does not return a result to the calling process.
+* A `Task` is a higher-level construct to create and interact with a separate process.
+    * Created by calling `Task.async` and passing a function.
+    * Calling `Task.await` will pause the current thread until the `Task` returns a result.
+* An `Agent` is a process that runs in the background and maintains a piece of state.
+    * `Agent.start` creates and agent and takes a function to run.
+    * `Agent.get` and `Agent.update` are used to retrieve and modify the Agent's state respectively.
+* `Agents` and `Tasks` can run on a different node from their calling processes.
+    * Can serve as simple building blocks for distributed applications.
 
 
     
