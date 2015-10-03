@@ -214,7 +214,89 @@
 * `Agents` and `Tasks` can run on a different node from their calling processes.
     * Can serve as simple building blocks for distributed applications.
 
+## An Elixir Adventure
 
+* I always find the best way to learn a language is to try to write a non-trivial program in it.
+* So I attempted to write a program that solves the travelling salesman problem in Elixir.
+    * Very naive implementation: finds all possible routes and calculate the length of each one to find the shortest.
+        * Horrible complexity of O(n<sup>2</sup>2<sup>n</sup>).
+    * Good opportunity to use Elixir's concurrency features to do the calculations in parallel.
+* Code for the program is in [salesman.exs](src/salesman.exs)
+* First needed to generate some locations.
+    * A location is a 3-tuple with an identifier, an x-coordinate and a y-coordinate.
+    * Found that Elixir uses Erlang's `random.uniform()` function to generate random numbers.
+        * Since it is an Erlang function, must be called as `:random.uniform()`.
+    * Used `Enum.map` function with a range and `:random.uniform` to create a list of locations.
+        * Impressively simple and concise code needed for this task. Only one line!
+* Perhaps due to recently writing Python code, I found I always forgot the `end` at the end of functions.
+* Next, I needed to find all the possible routes -- the permutations of the locations I generated.
+    * Very difficult to think of a recursive solution to this problem.
+    * After about thirty minutes of trying and failing to find a solution, I gave up and looked online.
+    * Solution turned out to involve a list comprehension combined with recursion.
+        * Again, impressively concise...
+        * ..but hard to wrap your brain around!
+        * Finding these solutions may become easier with more experience with functional programming.
+* Felt elegant to use Elixir's chaining syntax to pass the locations from my generation function directly into the permutation function.
+* Next step was to compute the length of a route.
+    * Considered using `Enum.reduce` which uses a function to collapse a list down to a single value.
+    * But didn't seem like it would work since the function only gets passed one list item at a time.
+    * Distance formula requires two locations at a time.
+    * So wrote a recursion-based list iteration algorithm to compute the length.
+        * Required Elixir's pattern-matching functionality to access first two items in the list as well as components of the location tuple.
+    * Required functional thinking, but much easier to think through than permute function.
+        * Functional programming confidence up!
+    * Math functions like powers and square-roots require dipping down into the Erlang math library.
+* Once I had a function to compute the length of a route, I use `Enum.map` to apply it to each route.
+* I then used `Enum.min_by` to find the shortest route.
+* As expected, performance was horrible.
+    * Memory usage was especially bad.
+    * Running it with more than 10 locations crashed iex.
+    * Running it on 100 locations crashed my computer.
+* Tried to improve performance by splitting the routes into four partitions and finding the minimum route for each partition in parallel.
+    * Chose four partitions because my CPU has four cores.
+* Had to look on line to figure out a way to the partitioning.
+    * Solution involved using `Enum.split` with recursion and pattern-mapping.
+    * Functional programming confidence back down!
+* Used `Enum.map` to create a task for each partition.
+    * Returned a list of tasks.
+* Used `Enum.map` again on the tasks to wait for the results and gather them into a list.
+   * Incredibly simple and concise code to do this complicated task!
+* Finally, just needed to find which of the partition minimums was the overall minimum.
+* Used Erlang's `:timer.tc` function to compare performs of single-threaded and parallel versions.
+    * Parallel version was slightly faster for 10 locations. 
+    * More than ten locations caused the Elixir environment to run out of memory.
+        * Memory situation could possibly be improved using Elixir's `Stream` module.
+* Encountered two compiler warnings. 
+    * Complains about unused function parameters.
+        * Fixed by replacing unused parameter names with underscores.
+    * Complains about multiple functions with the same name and number of parameters.
+        * Fixed by moving these function definitions next to each other in the source code.
+* Mission accomplished!!
+
+## Final Thoughts on Elixir
+
+### What I Liked
+
+* It was fun to think about how to solve problems in a functional way.
+* Can result in really concise elegant code.
+* Using functional looping helpers like `Enum.map` felt elegant and not hard to get used to.
+* Loved the ability to chain functions together like you can in the Unix shell.
+* Using `Tasks` makes writing parallel code really simple and easy to understand.
+* Erlang Beam VM's advanced process management is really powerful.
+
+### Possible Downsides
+
+* Syntax uses a lot of punctuation symbols so it doesn't read like English and can be hard to parse.
+    * Perl was criticized a lot for this.
+* For complicated cases where built-in functions like `Enum.map` doesn't work, you need to write your own functional iteration code using recursive calls.
+    * These can be very hard to get your head around.
+    * Hard to see "average" developers in industry writing this kind of code.
+* Elixir sometimes shows its young age.
+   * Need to call Erlang functions for a lot of functionality which creates a bigger learning curve and uglier syntax.
+   * Map implementations still seem to be a work in progress with several confusing alteranatives.
+   
+### Overall, it was really fun to play with Elixir and I am looking forward to doing more functional programming in the future!
+    
     
 
 
